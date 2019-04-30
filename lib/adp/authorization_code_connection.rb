@@ -38,6 +38,7 @@ module Adp
             :scope => 'openid',
             :state => self.state
         )
+        Log = Logger.new(STDOUT)
 
         Log.debug("URL was #{url}")
         return url
