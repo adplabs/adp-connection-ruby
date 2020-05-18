@@ -2,7 +2,13 @@
 
 **ADP_SSL_CERTIFICATE** - for the SSL certificate (.pem)
 
-**ADP_SSL_KEY** - for the key
+**ADP_SSL_KEY** - for the SSL certificate key
+
+## SSO
+
+**ADP_SSO_CLIENT_ID** - clientID in ADP docs
+
+**ADP_SSO_CLIENT_SECRET** - clientSecret in ADP docs
 
 
 # ADP Connection Client Library for Ruby

@@ -17,8 +17,8 @@ module Adp
 
       def initialize( config )
 
-        self.clientID = config["clientID"]
-        self.clientSecret = config["clientSecret"]
+        self.clientID = config["clientID"] || ENV.fetch("ADP_SSO_CLIENT_ID")
+        self.clientSecret = config["clientSecret"] || ENV.fetch("ADP_SSO_CLIENT_SECRET")
         self.sslCertPath = config["sslCertPath"]
         self.sslCaPath = config["sslCaPath"]
         self.sslKeyPath = config["sslKeyPath"]
