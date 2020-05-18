@@ -1,3 +1,10 @@
+# Environment variables
+
+**ADP_SSL_CERTIFICATE** - for the SSL certificate (.pem)
+
+**ADP_SSL_KEY** - for the key
+
+
 # ADP Connection Client Library for Ruby
 
 The ADP Client Connection Library is intended to simplify and aid the process of authenticating, authorizing and connecting to the ADP Marketplace API Gateway. The Library includes a sample application that can be run out-of-the-box to connect to the ADP Marketplace API **test** gateway.
