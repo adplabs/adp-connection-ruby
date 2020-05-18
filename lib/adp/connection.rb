@@ -8,6 +8,7 @@ require 'adp/authorization_code_configuration'
 require 'adp/authorization_code_connection'
 require 'adp/client_credential_configuration'
 require 'adp/client_credential_connection'
+require 'adp/product/dto/user_info'
 
 module Adp
   module Connection
