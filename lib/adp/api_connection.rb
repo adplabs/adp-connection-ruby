@@ -132,13 +132,16 @@ module Adp
 
             log.debug("User agent: #{useragent}")
 
-            if (!self.connection_configuration.sslCertPath.nil?)
+            if pem
                 http.use_ssl = true
                 http.cert = OpenSSL::X509::Certificate.new( pem );
                 http.key = OpenSSL::PKey::RSA.new(key, self.connection_configuration.sslKeyPass);
                 http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-                http.cert_store = OpenSSL::X509::Store.new
-                http.cert_store.add_file(self.connection_configuration.sslCaPath)
+            end
+
+            if !self.connection_configuration.sslCaPath.nil?
+              http.cert_store = OpenSSL::X509::Store.new
+              http.cert_store.add_file(self.connection_configuration.sslCaPath)
             end
 
             if method.eql?('POST')
