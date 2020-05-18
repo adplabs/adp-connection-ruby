@@ -119,8 +119,6 @@ module Adp
           content_type ||= "application/x-www-form-urlencoded"
           method ||= 'POST'
 
-            log = Logger.new(STDOUT)
-            log.level = Logger::DEBUG
             log.debug("URL: #{url}")
             log.debug("Client ID: #{data["client_id"]}")
             log.debug("Client Secret: #{data["client_secret"]}")
@@ -158,6 +156,12 @@ module Adp
             request["Authorization"] = authorization unless authorization.nil?
 
             response = JSON.parse(http.request(request).body)
+        end
+
+        private
+
+        def log
+          @_log ||= ::Logger.new(::STDOUT, level: ::Logger::DEBUG)
         end
     end
   end
