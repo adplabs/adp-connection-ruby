@@ -1,21 +1,14 @@
 # Environment variables
 
-Please use rails encrypted credentials. Example:
+Please use rails encrypted credentials (per environment). Example:
 
+`rails credentials:edit --environment development`
 ```
-development:
-  adp:
-      adp_sso_client_id: abc
-      adp_sso_client_secret: abc
-      adp_ssl_certificate: abc
-      adp_ssl_key: abc
-
-production:
-  adp:
-    adp_sso_client_id: abc
-    adp_sso_client_secret: abc
-    adp_ssl_certificate: abc
-    adp_ssl_key: abc
+adp:
+  adp_sso_client_id: abc
+  adp_sso_client_secret: abc
+  adp_ssl_certificate: abc
+  adp_ssl_key: abc
 ```
 
 If keys are present in the encrypted credentials, but their values are nil, it will fall back to the env vars. If keys aren't present in the credentials at all though, it will throw an exception. 
