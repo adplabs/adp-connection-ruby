@@ -1,14 +1,34 @@
 # Environment variables
 
-**ADP_SSL_CERTIFICATE** - for the SSL certificate (.pem)
+Please use rails encrypted credentials. Example:
 
-**ADP_SSL_KEY** - for the SSL certificate key
+```
+development:
+  adp:
+      adp_sso_client_id: abc
+      adp_sso_client_secret: abc
+      adp_ssl_certificate: abc
+      adp_ssl_key: abc
+
+production:
+  adp:
+    adp_sso_client_id: abc
+    adp_sso_client_secret: abc
+    adp_ssl_certificate: abc
+    adp_ssl_key: abc
+```
+
+If keys are present in the encrypted credentials, but their values are nil, it will fall back to the env vars. If keys aren't present in the credentials at all though, it will throw an exception. 
+
+`adp_ssl_certificate` (env var `ADP_SSL_CERTIFICATE`) - for the SSL certificate (.pem)
+
+`adp_ssl_key` (env var `ADP_SSL_KEY`) - for the SSL certificate key
 
 ## SSO
 
-**ADP_SSO_CLIENT_ID** - clientID in ADP docs
+`adp_sso_client_id` (env var `ADP_SSO_CLIENT_ID`) - clientID in ADP docs
 
-**ADP_SSO_CLIENT_SECRET** - clientSecret in ADP docs
+`adp_sso_client_secret` (env var `ADP_SSO_CLIENT_SECRET`) - clientSecret in ADP docs
 
 
 # ADP Connection Client Library for Ruby
