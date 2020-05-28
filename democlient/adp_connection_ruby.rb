@@ -78,7 +78,7 @@ class AdpConnectionRuby < Sinatra::Base
 
           connection.connect();
 
-          if (!connection.is_connected_indicator?)
+          if (!connection.connected?)
             results[:message] = "Error attempting to establish a connection"
             Log.error "Not connected"
           else
@@ -194,7 +194,7 @@ class AdpConnectionRuby < Sinatra::Base
       Log.debug("Do we have a connection object? #{connection}")
       unless connection.nil? || connection.connection_configuration.authorizationCode.nil?
         Log.debug("Check if we are connected: #{connection.access_token}")
-        if (connection.is_connected_indicator?)
+        if (connection.connected?)
           Log.debug("Getting helper object")
             helper = Adp::Connection::UserInfoHelper.new(connection)
           Log.debug("getting userinfo using helper object")

@@ -178,7 +178,7 @@ class AdpConnectionRuby < Sinatra::Base
 
           connection.connect();
 
-          if (!connection.is_connected_indicator?)
+          if (!connection.connected?)
             results[:message] = "Error attempting to establish a connection"
             Log.error "Not connected"
           else

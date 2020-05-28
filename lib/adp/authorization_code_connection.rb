@@ -47,7 +47,7 @@ module Adp
         token = self.access_token;
         result = nil;
 
-        if is_connected_indicator?
+        if connected?
 
           if self.connection_configuration.nil?
             raise ConnectionException, "Config error: Configuration is empty or not found"
