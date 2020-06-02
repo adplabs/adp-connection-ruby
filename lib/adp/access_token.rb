@@ -24,7 +24,7 @@ module Adp
       def expires_in=(value)
         unless value.nil?
           self._expires_in = value
-          self.expires_on = Time.new() + self._expires_in
+          self.expires_on = DateTime.current + self._expires_in.to_i.seconds
         end
         self.expires_on
       end

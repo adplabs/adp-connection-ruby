@@ -9,9 +9,9 @@ module Adp
       def initialize(config)
         super
 
+        self.clientID = config["clientID"] || Rails.application.credentials.fetch(:adp).fetch(:adp_dc_client_id) || ENV.fetch("ADP_DC_CLIENT_ID")
+        self.clientSecret = config["clientSecret"] || Rails.application.credentials.fetch(:adp).fetch(:adp_dc_client_secret) || ENV.fetch("ADP_DC_CLIENT_SECRET")
         self.grantType = :client_credentials
-
-        self
       end
     end
   end

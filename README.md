@@ -7,6 +7,8 @@ Please use rails encrypted credentials (per environment). Example:
 adp:
   adp_sso_client_id: abc
   adp_sso_client_secret: abc
+  adp_dc_client_id: abc
+  adp_dc_client_secret: abc
   adp_ssl_certificate: abc
   adp_ssl_key: abc
 ```
@@ -17,12 +19,17 @@ If keys are present in the encrypted credentials, but their values are nil, it w
 
 `adp_ssl_key` (env var `ADP_SSL_KEY`) - for the SSL certificate key
 
-## SSO
+## SSO (Single Sign-On)
 
 `adp_sso_client_id` (env var `ADP_SSO_CLIENT_ID`) - clientID in ADP docs
 
 `adp_sso_client_secret` (env var `ADP_SSO_CLIENT_SECRET`) - clientSecret in ADP docs
 
+## DC (Data Connector)
+
+`adp_dc_client_id` (env var `ADP_DC_CLIENT_ID`) - clientID in ADP docs
+
+`adp_dc_client_secret` (env var `ADP_DC_CLIENT_SECRET`) - clientSecret in ADP docs
 
 # ADP Connection Client Library for Ruby
 

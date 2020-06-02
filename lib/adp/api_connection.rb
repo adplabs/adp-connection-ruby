@@ -37,7 +37,7 @@ module Adp
 
       def connected?
         access_token = self.access_token
-        !access_token.nil? && Time.new < access_token.expires_on
+        access_token.present? && DateTime.current < access_token.expires_on
       end
 
       def get_access_token
@@ -69,9 +69,9 @@ module Adp
           "grant_type" => self.connection_configuration.grantType
         }
 
-        result = send_web_request(self.connection_configuration.tokenServerURL, data)
+        result = send_web_request(self.connection_configuration.tokenServerURL, data, content_type: "application/x-www-form-urlencoded", query_method: "POST")
 
-        if result["error"].nil? then
+        if result["error"].nil?
           token = AccessToken.new(result)
         else
           raise ConnectionException, "Connection error: #{result['error_description']}"
@@ -92,42 +92,43 @@ module Adp
           "redirect_uri" => self.connection_configuration.redirectURL
         }
 
-        data = send_web_request(product_url, data, authorization, "application/json", "GET")
+        data = send_web_request(product_url, data, authorization: authorization, content_type: "application/json", query_method: "GET")
 
         raise ConnectionException, "Connection error: #{data['error']}, #{data['error_description']}" unless data["error"].nil?
 
         return data
       end
 
-      def send_web_request(url, data = {}, authorization = nil, content_type = "application/x-www-form-urlencoded", method = "POST")
+      def send_web_request(url, data = {}, authorization: nil, content_type:, query_method:)
         useragent = "adp-connection-ruby/#{Adp::Connection::VERSION}"
         uri = URI.parse(url)
-        pem = Rails.application.credentials.fetch(:adp).fetch(:adp_ssl_certificate) || ENV.fetch("ADP_SSL_CERTIFICATE")
-        key = Rails.application.credentials.fetch(:adp).fetch(:adp_ssl_key) || ENV.fetch("ADP_SSL_KEY")
+        ssl_certificate = Rails.application.credentials.fetch(:adp).fetch(:adp_ssl_certificate) || ENV.fetch("ADP_SSL_CERTIFICATE")
+        ssl_key = Rails.application.credentials.fetch(:adp).fetch(:adp_ssl_key) || ENV.fetch("ADP_SSL_KEY")
         http = Net::HTTP.new(uri.host, uri.port)
 
-        if pem
+        if ssl_certificate.present?
           http.use_ssl = true
-          http.cert = OpenSSL::X509::Certificate.new(pem)
-          http.key = OpenSSL::PKey::RSA.new(key, self.connection_configuration.sslKeyPass)
+          http.cert = OpenSSL::X509::Certificate.new(ssl_certificate)
+          http.key = OpenSSL::PKey::RSA.new(ssl_key, self.connection_configuration.sslKeyPass)
           http.verify_mode = OpenSSL::SSL::VERIFY_PEER
         end
 
-        if !self.connection_configuration.sslCaPath.nil?
+        if self.connection_configuration.sslCaPath.present?
           http.cert_store = OpenSSL::X509::Store.new
           http.cert_store.add_file(self.connection_configuration.sslCaPath)
         end
 
-        if method.eql?("POST")
-          request = Net::HTTP::Post.new(uri.request_uri)
+        request = query_method == "POST" ? Net::HTTP::Post.new(uri.request_uri) : Net::HTTP::Get.new(uri.request_uri)
+
+        if content_type == "application/x-www-form-urlencoded"
           request.set_form_data(data)
-        else
-          request = Net::HTTP::Get.new(uri.request_uri)
+        elsif content_type == "application/json"
+          request.body = data.to_json
         end
 
         request.initialize_http_header({ "User-Agent" => useragent })
         request["Content-Type"] = content_type
-        request["Authorization"] = authorization unless authorization.nil?
+        request["Authorization"] = authorization if authorization.present?
 
         JSON.parse(http.request(request).body)
       end
