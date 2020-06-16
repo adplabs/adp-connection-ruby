@@ -99,7 +99,7 @@ module Adp
         return data
       end
 
-      def send_web_request(url, data = {}, authorization: nil, content_type:, query_method:)
+      def send_web_request(url, data = {}, authorization: nil, content_type:, query_method:, options: {})
         useragent = "adp-connection-ruby/#{Adp::Connection::VERSION}"
         uri = URI.parse(url)
         ssl_certificate = Rails.application.credentials.fetch(:adp).fetch(:adp_ssl_certificate) || ENV.fetch("ADP_SSL_CERTIFICATE")
@@ -129,6 +129,7 @@ module Adp
         request.initialize_http_header({ "User-Agent" => useragent })
         request["Content-Type"] = content_type
         request["Authorization"] = authorization if authorization.present?
+        request["Accept"] = "application/json;masked=false" if options.fetch(:unmasked, false)
 
         JSON.parse(http.request(request).body)
       end
