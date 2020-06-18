@@ -131,7 +131,8 @@ module Adp
         request["Authorization"] = authorization if authorization.present?
         request["Accept"] = "application/json;masked=false" if options.fetch(:unmasked, false)
 
-        JSON.parse(http.request(request).body)
+        response_body = http.request(request).body
+        response_body.nil? ? nil : JSON.parse(response_body)
       end
 
       private
