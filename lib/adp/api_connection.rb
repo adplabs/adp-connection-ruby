@@ -19,6 +19,12 @@ module Adp
       attr_accessor :state
       attr_accessor :access_token
 
+      REQUEST_TYPE_MAPPING = {
+        "POST"   => Net::HTTP::Post,
+        "GET"    => Net::HTTP::Get,
+        "DELETE" => Net::HTTP::Delete
+      }.freeze
+
       def initialize(config = nil)
         self.connection_configuration = config
       end
@@ -118,7 +124,7 @@ module Adp
           http.cert_store.add_file(self.connection_configuration.sslCaPath)
         end
 
-        request = query_method == "POST" ? Net::HTTP::Post.new(uri.request_uri) : Net::HTTP::Get.new(uri.request_uri)
+        request = REQUEST_TYPE_MAPPING.fetch(query_method).new(uri.request_uri)
 
         if content_type == "application/x-www-form-urlencoded"
           request.set_form_data(data)
