@@ -9,9 +9,23 @@ require 'adp/authorization_code_connection'
 require 'adp/client_credential_configuration'
 require 'adp/client_credential_connection'
 require 'adp/product/dto/user_info'
+require 'adp/configuration'
+require 'adp/marketplace'
 
 module Adp
   module Connection
-    # Your code goes here...
+    class << self
+      extend ::Forwardable
+
+      def_delegators :configuration, *::Adp::Configuration::OPTIONS
+
+      def configure
+        yield configuration
+      end
+
+      def configuration
+        @configuration ||= ::Adp::Configuration.new
+      end
+    end
   end
 end

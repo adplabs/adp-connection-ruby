@@ -108,8 +108,6 @@ module Adp
       def send_web_request(url, data = {}, authorization: nil, content_type:, query_method:, options: {})
         useragent = "adp-connection-ruby/#{Adp::Connection::VERSION}"
         uri = URI.parse(url)
-        ssl_certificate = Rails.application.credentials.fetch(:adp).fetch(:adp_ssl_certificate) || ENV.fetch("ADP_SSL_CERTIFICATE")
-        ssl_key = Rails.application.credentials.fetch(:adp).fetch(:adp_ssl_key) || ENV.fetch("ADP_SSL_KEY")
         http = Net::HTTP.new(uri.host, uri.port)
 
         if ssl_certificate.present?
@@ -137,11 +135,26 @@ module Adp
         request["Authorization"] = authorization if authorization.present?
         request["Accept"] = "application/json;masked=false" if options.fetch(:unmasked, false)
 
-        response_body = http.request(request).body
+        api_logger.log_request(uri: uri, request: request)
+        response = http.request(request)
+        api_logger.log_response(response: response)
+        response_body = response.body
         response_body.nil? ? nil : JSON.parse(response_body)
       end
 
+      def api_logger
+        @adp_logger ||= ::Adp::Connection.api_logger.new(self)
+      end
+
       private
+
+      def ssl_certificate
+        ::Adp::Connection.ssl_certificate || ENV.fetch("ADP_SSL_CERTIFICATE")
+      end
+
+      def ssl_key
+        ::Adp::Connection.ssl_key || ENV.fetch("ADP_SSL_KEY")
+      end
 
       def log
         @_log ||= ::Logger.new(::STDOUT, level: ::Logger::DEBUG)
