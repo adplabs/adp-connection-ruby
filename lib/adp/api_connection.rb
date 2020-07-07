@@ -143,7 +143,7 @@ module Adp
       end
 
       def api_logger
-        @adp_logger ||= ::Adp::Connection.api_logger.new(self)
+        @adp_logger ||= ::Adp::Connection.api_logger.new
       end
 
       private
