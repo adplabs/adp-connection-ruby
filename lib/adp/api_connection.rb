@@ -75,7 +75,7 @@ module Adp
           "grant_type" => self.connection_configuration.grantType
         }
 
-        result = send_web_request(self.connection_configuration.tokenServerURL, data, content_type: "application/x-www-form-urlencoded", query_method: "POST")
+        result = send_web_request(self.connection_configuration.tokenServerURL, data, content_type: "application/x-www-form-urlencoded", query_method: "POST").body
 
         if result["error"].nil?
           token = AccessToken.new(result)
@@ -98,11 +98,11 @@ module Adp
           "redirect_uri" => self.connection_configuration.redirectURL
         }
 
-        data = send_web_request(product_url, data, authorization: authorization, content_type: "application/json", query_method: "GET")
+        data = send_web_request(product_url, data, authorization: authorization, content_type: "application/json", query_method: "GET").body
 
         raise ConnectionException, "Connection error: #{data['error']}, #{data['error_description']}" unless data["error"].nil?
 
-        return data
+        data
       end
 
       def send_web_request(url, data = {}, authorization: nil, content_type:, query_method:, options: {})
@@ -138,8 +138,9 @@ module Adp
         api_logger.log_request(uri: uri, request: request)
         response = http.request(request)
         api_logger.log_response(response: response)
-        response_body = response.body
-        response_body.nil? ? nil : JSON.parse(response_body)
+        response.body = JSON.parse(response.body) unless response.body.nil?
+
+        response
       end
 
       def api_logger
