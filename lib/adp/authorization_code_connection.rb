@@ -77,9 +77,9 @@ module Adp
             "grant_type" => self.connection_configuration.grantType,
             "code" => self.connection_configuration.authorizationCode,
             "redirect_uri" => self.connection_configuration.redirectURL
-        };
+        }
 
-        result = send_web_request(self.connection_configuration.tokenServerURL, data, content_type: "application/x-www-form-urlencoded", query_method: "POST")
+        result = send_web_request(self.connection_configuration.tokenServerURL, data, content_type: "application/x-www-form-urlencoded", query_method: "POST").body
 
         if result["error"].nil? then
           token = AccessToken.new(result)
