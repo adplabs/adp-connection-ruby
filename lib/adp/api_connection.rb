@@ -138,7 +138,7 @@ module Adp
         api_logger.log_request(uri: uri, request: request)
         response = http.request(request)
         api_logger.log_response(response: response)
-        response.body = JSON.parse(response.body) unless response.body.nil?
+        response.body = response.body.present? ? JSON.parse(response.body) : nil
 
         response
       end
