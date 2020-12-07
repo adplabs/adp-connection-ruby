@@ -102,7 +102,7 @@ module Adp
 
         raise ConnectionException, "Connection error: #{data['error']}, #{data['error_description']}" unless data["error"].nil?
 
-        data
+        data.tap { |json_result| log.debug("Got user info #{json_result}") }
       end
 
       def send_web_request(url, data = {}, authorization: nil, content_type:, query_method:, options: {})
